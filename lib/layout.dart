@@ -13,6 +13,11 @@ class MyLayout extends StatefulWidget {
 }
 
 class _MyLayout extends State<MyLayout> {
+  Color act = Colors.blue;
+  Color inact = Colors.grey[400];
+  Color btn1cl = Colors.grey[400];
+  Color btn2cl = Colors.grey[400];
+  Color btn3cl = Colors.grey[400];
   var xPos = 0.0;
   var yPos = 0.0;
   final width = 439.0;
@@ -21,21 +26,71 @@ class _MyLayout extends State<MyLayout> {
   double _size = 100;
   ui.Image _image;
 
+  List<String> eyebrownlib = [
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Netscape-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Brain-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/No-Drop-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Santa-onSled-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/File-Copy-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Two-FingersDrag-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Motorcycle-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Monitor-phone-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Synchronize-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Synchronize-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/File-Copy-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Two-FingersDrag-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/No-Drop-icon.png',
+  ];
+  List<String> lipslib = [
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Air-Balloon-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Alien-2-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Ambulance-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Angel-Smiley-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Apple-Bite-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Add-UserStar-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Add-Cart-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Aim-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Ambulance-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Angel-Smiley-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Apple-Bite-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Add-UserStar-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Add-Cart-icon.png',
+    'https://icons.iconarchive.com/icons/iconsmind/outline/128/Aim-icon.png',
+  ];
+  List<Widget> _resource = [];
+  List<Widget> _resourceeye = [];
+  List<Widget> _resourcelip = [];
+
   @override
   void initState() {
     _loadImage();
   }
 
   _loadImage() async {
+    List<Widget> library1 = [];
+    List<Widget> library2 = [];
     ByteData bd = await rootBundle.load("assets/resource/face.jpg");
-
     final Uint8List bytes = Uint8List.view(bd.buffer);
-
     final ui.Codec codec = await ui.instantiateImageCodec(bytes);
-
     final ui.Image image = (await codec.getNextFrame()).image;
 
-    setState(() => _image = image);
+    eyebrownlib.forEach((image) {
+      library1.add(Expanded(
+        child: Image.network(image),
+      ));
+    });
+
+    lipslib.forEach((image) {
+      library2.add(
+        Image.network(image),
+      );
+    });
+
+    setState(() {
+      _image = image;
+      _resourceeye = library1;
+      _resourcelip = library2;
+    });
   }
 
   /// Is the point (x, y) inside the rect?
@@ -49,7 +104,71 @@ class _MyLayout extends State<MyLayout> {
       child: new Container(
         width: MediaQuery.of(context).size.width / 10,
         height: MediaQuery.of(context).size.height,
-        color: Colors.green,
+        //color: Colors.green,
+        child: new Center(
+          child: Card(
+            elevation: 0,
+            color: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlineButton(
+                  onPressed: () {
+                    setState(() {
+                      _resource = _resourceeye;
+                      btn1cl = act;
+                      btn2cl = inact;
+                    });
+                  },
+                  shape: new CircleBorder(),
+                  borderSide: BorderSide(color: btn1cl),
+                  child: Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: Colors.pink[300],
+                    size: 50.0,
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height / 15),
+                OutlineButton(
+                  onPressed: () {
+                    setState(() {
+                      _resource = _resourcelip;
+                      btn2cl = act;
+                      btn1cl = inact;
+                    });
+                  },
+                  shape: new CircleBorder(),
+                  borderSide: BorderSide(color: btn2cl),
+                  child: Icon(
+                    Icons.child_care,
+                    color: Colors.pink[300],
+                    size: 50.0,
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height / 15),
+                OutlineButton(
+                  onPressed: () {
+                    if (btn3cl == inact)
+                      setState(() {
+                        btn3cl = act;
+                      });
+                    else
+                      setState(() {
+                        btn3cl = inact;
+                      });
+                  },
+                  shape: new CircleBorder(),
+                  borderSide: BorderSide(color: btn3cl),
+                  child: Icon(
+                    Icons.face_retouching_natural,
+                    color: Colors.pink[300],
+                    size: 50.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -61,10 +180,11 @@ class _MyLayout extends State<MyLayout> {
       child: new Container(
         width: MediaQuery.of(context).size.width / 10,
         height: MediaQuery.of(context).size.height,
+        color: Colors.red,
         child: new Center(
           child: Card(
-            elevation: 0,
-            color: Colors.transparent,
+            //elevation: 0,
+            //color: Colors.transparent,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -84,6 +204,22 @@ class _MyLayout extends State<MyLayout> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget nepTune(BuildContext context) {
+    return new Positioned(
+      left: MediaQuery.of(context).size.width / 10,
+      bottom: 0.0,
+      child: new Container(
+        width: MediaQuery.of(context).size.width * 4 / 5,
+        height: MediaQuery.of(context).size.width / 10,
+        color: Colors.blue,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: _resource,
         ),
       ),
     );
@@ -128,6 +264,7 @@ class _MyLayout extends State<MyLayout> {
         ),
         leftTune(context),
         rightTune(context),
+        nepTune(context),
       ],
     );
   }
